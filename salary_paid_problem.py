@@ -43,74 +43,26 @@ Upon, taxable salary apply the slab and tax percentage logic. Upon computation, 
 are paid amounts 1000000, 1200000, 1400000, 1700000 respectively, as salaries
 . So, the total salary paid to all employees in that year will be 5300000.'''
 
-slabs=list(map(int,input().split()))
-
-rates=list(map(int,input().split()))
-
+slab=list(map(int,input().split()))
+per=list(map(int,input().split()))
 rebate=int(input())
-
-emp_tax=list(map(int,input().split()))
-
-slab_tax=[]
-
-x=0
-
-for i in range(len(slabs)):
-
-  if i==0:
-
-    slab_tax.append(x)
-
-  elif i>0:
-
-    x+=int(((slabs[i]-slabs[i-1])*rates[i-1])/100)
-
-    slab_tax.append(x)
-
+emp_intax=list(map(int,input().split()))
 total=0
-
-for j in emp_tax:
-
-  summ=0
-
-  for k in range(len(slab_tax)):
-
-    if j<=slab_tax[k]:
-
-      summ=summ+slabs[k-1]
-
-      taxx=j-slab_tax[k-1]
-
-      sall=(taxx*100)/rates[k-1]
-
-      sal=sall+summ
-
-      salary=sal+rebate
-
-      #print(salary)
-
-      total=total+salary
-
-      break
-
-    elif ((k==len(slab_tax)-1) and j>slab_tax[k]):
-
-      summ=summ+slabs[k]
-
-      taxx=j-slab_tax[k]
-
-      sall=(taxx*100)/rates[k]
-
-      sal=sall+summ
-
-      salary=sal+rebate
-
-      #print(salary)
-
-      total=total+salary
-
+emp_sal=[0]*len(emp_intax)
+for i in range(len(emp_intax)):
+    emp_sal[i]+=slab[0]
+    emp_tax=emp_intax[i]
+    for j in range(1,len(slab)):
+        max_slab_tax=(slab[j]-slab[j-1])*per[j-1]/100
+        if max_slab_tax<=emp_tax:
+            emp_sal[i]+=(slab[j]-slab[j-1])
+            emp_tax-=max_slab_tax
+        else:
+            curr_slab = emp_tax*100/per[j-1]
+            emp_sal[i]+=curr_slab
+            emp_tax-=curr_slab
+    if emp_tax>0:
+        emp_sal[i]+=emp_tax*100/per[-1]
+    total+=emp_sal[i]+rebate
 print(int(total))
-
-
-
 
